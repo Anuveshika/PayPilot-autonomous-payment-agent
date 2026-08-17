@@ -6,6 +6,22 @@ The user authorizes a visible maximum once. Deterministic code meters actual usa
 
 The repository ships with a **signed local payment simulator**. It never moves real funds. A production x402/Circle rail must be added behind the payment adapter before deployment.
 
+## Project deliverables
+
+- [Investor and technical architecture presentation](deliverables/PayPilot_Investor_Technical_Deck_Business_Integration.pptx) — dark-theme product, business-integration, Circle, Razorpay, safety, and rollout overview.
+- [Automated test-case register with evidence](deliverables/PayPilot_Automated_Test_Case_Register_With_Evidence.xlsx) — test scenarios, expected results, execution status, and recorded evidence.
+- [Full PayPilot demo video](demo/paypilot_demo.mp4) — long-form product demonstration recording.
+
+On GitHub, select any file to preview its metadata or download the original artifact.
+
+## Demo video
+
+[![Watch the PayPilot demo video](assets/video/PayPilot_Execution_Plan_Metered_Usage_Dark.png)](demo/paypilot_demo.mp4)
+
+[Watch or download `paypilot_demo.mp4`](demo/paypilot_demo.mp4)
+
+The recording is intended to demonstrate the application running locally at [http://127.0.0.1:4021](http://127.0.0.1:4021). The default local payment rail is a signed simulator and does not move real funds. A real Circle wallet transaction and block-explorer URL require the production payment adapter.
+
 ## Run it
 
 Requirements: Node.js 22 or newer. There are no runtime package dependencies.
@@ -48,6 +64,40 @@ Create session → signed capped offer → user agent policy evaluation
 ```
 
 The service model can plan which operations are useful. Only the pricing and payment-policy engines can approve a billable event or final settlement.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    U["User or calling AI"] --> API["PayPilot REST API"]
+
+    subgraph CONTROL["Control plane"]
+        API --> UA["User payment agent"]
+        UA --> POLICY["Policy engine<br/>caps, allowlists, expiry"]
+        POLICY --> SESSION["Session service<br/>authorization and state"]
+    end
+
+    subgraph EXECUTION["Business execution plane"]
+        SESSION --> ORCH["Service orchestrator"]
+        ORCH --> REGISTRY["Business registry<br/>versioned service contract"]
+        REGISTRY --> ADAPTER["HTTPS API or<br/>private adapter"]
+        ADAPTER --> BUSINESS["Business service"]
+        BUSINESS -->|"result and usage"| ORCH
+    end
+
+    subgraph MONEY["Deterministic money plane"]
+        ORCH --> LEDGER["Append-only usage ledger"]
+        LEDGER --> PRICE["Pricing engine"]
+        PRICE --> SETTLE["Payment policy and settlement"]
+        SETTLE --> RAIL["Payment rail adapter<br/>demo, Circle, or x402"]
+    end
+
+    RAIL --> WALLET["Registered merchant wallet"]
+    RAIL --> PROOF["Signed receipt<br/>wallet, transaction, explorer proof"]
+    PROOF --> API
+```
+
+The business receives a scoped task contract and returns structured output, metered usage, and delivery evidence. It never receives the user's wallet keys or authority to change the price, recipient, network, cap, or final settlement.
 
 ## REST API
 
@@ -96,7 +146,7 @@ See [Architecture](docs/ARCHITECTURE.md) for the component boundaries and [Produ
 Deployment and integrations:
 
 - [Google Cloud production deployment](docs/PRODUCTION-DEPLOYMENT.md)
-- [Connect Vertex AI or an existing private Gemini Cloud Run service](docs/GOOGLE-CLOUD-GEMINI.md)
+- Connect any business through the [versioned plugin and trust-boundary contract](docs/ARCHITECTURE.md), using either a signed HTTPS endpoint or a private service adapter.
 - [Use the shared payment agent with an existing Razorpay application](docs/RAZORPAY-INTEGRATION.md)
 
 ## Important limitations
