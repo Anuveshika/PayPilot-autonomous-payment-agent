@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Autonomous, policy-bound USDC payments for metered AI services.">
+    <title>PayPilot — Autonomous Payment Agent</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <header class="shell nav">
+      <a class="brand" href="/" aria-label="PayPilot home">
+        <span class="brand-mark"><span></span></span>
+        <span>PayPilot</span>
+      </a>
+      <div class="nav-meta">
+        <span class="status-dot"></span>
+        <span>Policy engine online</span>
+        <span class="mode-pill">DEMO RAIL</span>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">AUTONOMOUS COMMERCE, WITH HARD LIMITS</p>
+          <h1>Let your agent pay.<br><span>Keep the final say.</span></h1>
+          <p class="hero-copy">One payment agent for many businesses. It inspects every offer, authorizes a maximum, watches live usage, and settles only the measured amount.</p>
+        </div>
+        <div class="trust-strip" aria-label="Core safeguards">
+          <div><span>01</span><strong>Capped</strong><small>No charge above your limit</small></div>
+          <div><span>02</span><strong>Metered</strong><small>Every usage event is visible</small></div>
+          <div><span>03</span><strong>Scoped</strong><small>One task, one short authorization</small></div>
+        </div>
+      </section>
+
+      <section class="workspace-grid">
+        <div class="setup-column">
+          <div class="section-heading">
+            <div><span class="step-number">1</span><div><p class="kicker">CHOOSE A BUSINESS</p><h2>What should the agent buy?</h2></div></div>
+            <span id="service-count" class="count"></span>
+          </div>
+          <div id="service-list" class="service-list" aria-live="polite"></div>
+
+          <form id="session-form" class="task-card">
+            <div class="section-heading compact">
+              <div><span class="step-number">2</span><div><p class="kicker">SET THE SCOPE</p><h2>Task and spending policy</h2></div></div>
+            </div>
+            <div id="dynamic-fields" class="form-grid"></div>
+            <div class="form-grid two">
+              <label>Maximum authorization
+                <div class="money-input"><span>USDC</span><input id="maximum" name="maximumChargeUsdc" value="1.00" inputmode="decimal" required></div>
+              </label>
+              <label>Agent wallet
+                <input id="wallet" name="payerAddress" value="0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" required>
+              </label>
+            </div>
+            <div class="authorization-preview">
+              <div class="shield-icon">✓</div>
+              <div><strong>Single-session capped authorization</strong><p>The merchant cannot change the wallet, pricing version, service, or maximum after approval.</p></div>
+              <span>Non-recurring</span>
+            </div>
+            <button id="launch-button" class="primary-button" type="submit">
+              <span>Authorize & run agent</span><span class="arrow">→</span>
+            </button>
+            <p id="form-error" class="error-message" role="alert"></p>
+          </form>
+        </div>
+
+        <aside class="live-column">
+          <div class="live-card">
+            <div class="live-header">
+              <div><p class="kicker">LIVE SESSION</p><h2 id="live-title">Awaiting a task</h2></div>
+              <span id="live-status" class="status-badge idle">IDLE</span>
+            </div>
+
+            <div id="empty-state" class="empty-state">
+              <div class="orbit"><span></span><i></i><b></b></div>
+              <h3>Your payment agent is ready</h3>
+              <p>Select a service and set a maximum. The agent will evaluate the merchant and execute within policy.</p>
+            </div>
+
+            <div id="session-view" class="session-view hidden">
+              <div class="budget-panel">
+                <div class="budget-top"><div><small>CURRENT CHARGE</small><strong><span id="current-charge">0.000000</span> <em>USDC</em></strong></div><div class="align-right"><small>AUTHORIZED MAX</small><strong><span id="maximum-charge">0.000000</span> <em>USDC</em></strong></div></div>
+                <div class="progress-track"><span id="budget-progress"></span></div>
+                <div class="budget-bottom"><span><b id="budget-percent">0%</b> used</span><span><b id="remaining-charge">0.000000</b> USDC remains</span></div>
+              </div>
+
+              <div id="agent-decision" class="agent-decision">
+                <span class="agent-pulse"></span>
+                <div><small>PAYMENT AGENT</small><p>Inspecting the signed offer…</p></div>
+              </div>
+
+              <div class="subsection-title"><span>EXECUTION PLAN</span><span id="step-progress">0 / 0</span></div>
+              <div id="plan-list" class="plan-list"></div>
+
+              <div class="subsection-title ledger-title"><span>USAGE LEDGER</span><button id="toggle-ledger" type="button">Show details</button></div>
+              <div id="ledger-list" class="ledger-list hidden"></div>
+
+              <div id="result-card" class="result-card hidden"></div>
+              <div id="receipt-card" class="receipt-card hidden"></div>
+            </div>
+          </div>
+          <div class="rail-note"><span>!</span><p><strong>Safe simulation.</strong> This workspace uses signed demo authorizations and never moves real funds. Install a production payment adapter before deployment.</p></div>
+        </aside>
+      </section>
+    </main>
+    <footer class="shell"><span>PayPilot reference implementation</span><span>USDC atomic accounting · append-only usage · idempotent settlement</span></footer>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

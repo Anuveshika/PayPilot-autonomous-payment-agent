@@ -1,0 +1,21 @@
+{
+  "name": "autonomous-payment-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A capped, usage-metered autonomous payment agent platform for multiple businesses.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test --test-concurrency=1",
+    "test:coverage": "node --test --test-concurrency=1 --experimental-test-coverage --test-coverage-include=src/**/*.js --test-coverage-exclude=src/public/** --test-coverage-exclude=src/server.js --test-coverage-lines=88 --test-coverage-branches=70 --test-coverage-functions=85",
+    "check": "node --check src/server.js"
+  },
+  "dependencies": {
+    "@google/genai": "^2.16.0",
+    "google-auth-library": "^11.0.1"
+  }
+}

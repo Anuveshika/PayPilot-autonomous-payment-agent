@@ -1,0 +1,7 @@
+.env
+.data/*
+!.data/.gitkeep
+coverage/
+node_modules/
+npm-debug.log*
+
